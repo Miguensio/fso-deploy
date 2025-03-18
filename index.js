@@ -16,8 +16,8 @@ const requestLogger = (request, response, next) => {
 }
 
 app.use(requestLogger)
-app.use(cors())
 app.use(express.json())
+app.use(cors())
 
 const generateId = () => {
     const id = Math.floor(Math.random()*10000)
@@ -59,7 +59,7 @@ app.get('/info', (request, response) => {
         entries++
     })
 
-    response.send(`<p>Phonebook has info for 2 people <br> ${date}</p>`)
+    response.send(`<p>Phonebook has info for ${entries} people <br> ${date}</p>`)
 })
 
 app.get('/api/persons', (request, response) => {
