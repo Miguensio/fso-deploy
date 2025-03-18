@@ -1,6 +1,5 @@
 const express = require('express')
 const app = express()
-const cors = require('cors')
 const morgan = require('morgan')
 
 morgan.token('body', (req) => { return JSON.stringify(req.body) })
@@ -17,7 +16,7 @@ const requestLogger = (request, response, next) => {
 
 app.use(requestLogger)
 app.use(express.json())
-app.use(cors())
+app.use(express.static('dist'))
 
 const generateId = () => {
     const id = Math.floor(Math.random()*10000)
@@ -26,26 +25,28 @@ const generateId = () => {
 
 let phonebook = [
     { 
-        "id": "1",
+        "id": 1,
         "name": "Arto Hellas", 
         "number": "040-123456"
         },
         { 
-        "id": "2",
+        "id": 2,
         "name": "Ada Lovelace", 
         "number": "39-44-5323523"
         },
         { 
-        "id": "3",
+        "id": 3,
         "name": "Dan Abramov", 
         "number": "12-43-234345"
         },
         { 
-        "id": "4",
+        "id": 4,
         "name": "Mary Poppendieck", 
         "number": "39-23-6423122"
     }
 ]
+
+console.log(phonebook)
 
 app.get('/', (request, response) => {
     response.send("<h1>Phonebook</h1>")
@@ -103,11 +104,13 @@ app.post('/api/persons', (request, response) => {
 })
 
 app.delete('/api/persons/:id', (request, response) => {
-    const id = request.params.id
+    const id = Number(request.params.id)
 
+    const personToDelete = phonebook.find(person => person.id === id)
+    
     phonebook = phonebook.filter(person => person.id !== id)
 
-    response.status(204).end()
+    response.status(200).send(personToDelete)
 })
 
 const unknownEndpoint = (request, response) => {
